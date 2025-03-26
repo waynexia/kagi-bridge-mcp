@@ -61,10 +61,12 @@ class BrowserSearchClient:
 
     def __init__(self, url: Optional[str] = None):
         """Initialize with an optional URL that contains the authentication token."""
-        self.url = url or os.environ.get("SEARCH_URL")
+        token = os.environ.get("SESSION_TOKEN") or ""
+        # self.url = url or os.environ.get("SESSION_TOKEN")
+        self.url = f"https://kagi.com/search?token={token}" if not url else url
         if not self.url:
             raise ValueError(
-                "Search URL must be provided either in constructor or as SEARCH_URL environment variable"
+                "Search URL must be provided either in constructor or as SESSION_TOKEN environment variable"
             )
         logger.info(f"Initialized BrowserSearchClient with URL type: {type(self.url)}")
         self.browser = None
@@ -92,6 +94,7 @@ class BrowserSearchClient:
                 else:
                     raise ValueError(f"Invalid URL object: {self.url}")
 
+            # auth_url = f"https://kagi.com/search?token={self.url}"
             await page.goto(self.url)
             await page.wait_for_load_state("networkidle")
         except Exception as e:
@@ -209,7 +212,7 @@ def cleanup():
             if _loop:
                 # Schedule the close in the event loop
                 future = asyncio.run_coroutine_threadsafe(search_client.close(), _loop)
-                future.result(timeout=5)  # Wait for up to 5 seconds
+                future.result(timeout=30)  # Wait for up to 5 seconds
 
                 # Stop the loop
                 _loop.call_soon_threadsafe(_loop.stop)
@@ -240,7 +243,10 @@ def search(
 
         # Initialize the search client if not already done
         if not search_client:
-            search_url = os.environ.get("SEARCH_URL")
+            token = os.environ.get("SESSION_TOKEN")
+            search_url = f"https://kagi.com/search?token={token}" if token else None
+            if not search_url:
+                raise ValueError("No SESSION_TOKEN found in environment variables.")
             logger.info(
                 f"Creating search client with URL from env: {search_url} (type: {type(search_url)})"
             )
@@ -333,7 +339,8 @@ def format_search_results(queries: list[str], responses) -> str:
 
         formatted_results_str = "\n\n".join(formatted_results_list)
         query_response_str = query_response_template.format(
-            query=query, formatted_search_results=formatted_results_str
+            query=query,
+            formatted_search_results=formatted_results_str,
         )
         per_query_response_strs.append(query_response_str)
 
