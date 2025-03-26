@@ -347,11 +347,6 @@ def format_search_results(queries: list[str], responses) -> str:
 
 
 def main():
-    # Add command-line argument parsing
-    parser = argparse.ArgumentParser(
-        description="Kagi MCP Server with headless browser search"
-    )
-
     mcp.run()
 
 

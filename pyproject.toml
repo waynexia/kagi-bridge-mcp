@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = [
     { name = "Ruihang Xia" },
 ]
-description = "Kagi MPC server"
+description = "Kagi MCP server"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
