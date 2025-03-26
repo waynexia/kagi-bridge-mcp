@@ -123,12 +123,6 @@ class BrowserSearchClient:
             await page.goto(search_url)
             await page.wait_for_load_state("networkidle")
 
-            page_content = await page.content()
-            debug_html_file = f"debug_page_{int(time.time())}.html"
-            with open(debug_html_file, "w", encoding="utf-8") as f:
-                f.write(page_content)
-            logger.info(f"Saved page HTML to {debug_html_file}")
-
             # Extract search results
             results = await page.evaluate(
                 """

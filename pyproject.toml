@@ -1,10 +1,10 @@
 [project]
 name = "kagi-bridge-mcp"
-version = "0.1.0"
+version = "0.1.1"
 authors = [
     { name = "Ruihang Xia" },
 ]
-description = "Kagi MCP server"
+description = "Kagi Bridge MCP Server"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -22,7 +22,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project.scripts]
-kagi-bridge-mcp = "kagi-bridge-mcp:main"
+kagi-bridge-mcp = "kagi_bridge_mcp:main"
 
 [project.optional-dependencies]
 dev = [
